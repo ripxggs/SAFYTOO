@@ -4,7 +4,6 @@
 local Maid = {}
 Maid.ClassName = "Maid"
 
---- Returns a new Maid object
 -- @constructor Maid.new()
 -- @treturn Maid
 function Maid.new()
@@ -24,13 +23,13 @@ function Maid:__index(index)
 	end
 end
 
+--- Add a task to clean up
 -- @usage
 -- Maid[key] = (function)         Adds a task to perform
 -- Maid[key] = (event connection) Manages an event connection
 -- Maid[key] = (Maid)             Maids can act as an event connection, allowing a Maid to have other maids to clean up.
 -- Maid[key] = (Object)           Maids can cleanup objects with a `Destroy` method
 -- Maid[key] = nil                Removes a named task. If the task is an event, it is disconnected. If it is an object, it is destroyed.
-
 function Maid:__newindex(index, newTask)
 	if Maid[index] ~= nil then
 		error(("'%s' is reserved"):format(tostring(index)), 2)
@@ -80,7 +79,6 @@ function Maid:GivePromise(promise)
 	return newPromise
 end
 
--- @alias Destroy
 function Maid:DoCleaning()
 	local tasks = self._tasks
 
@@ -90,6 +88,7 @@ function Maid:DoCleaning()
 			task:Disconnect()
 		end
 	end
+
 	local index, task = next(tasks)
 	while task ~= nil do
 		tasks[index] = nil
@@ -104,7 +103,6 @@ function Maid:DoCleaning()
 	end
 end
 
--- @function Destroy
 Maid.Destroy = Maid.DoCleaning
 
 return Maid
